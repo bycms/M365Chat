@@ -1,0 +1,102 @@
+header {
+    background-color: #f0f0f0;
+    padding: 14px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+header label {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 2em;
+    margin: 0;
+    color: #333;
+}
+
+header button {
+    position: absolute;
+    right: 0;
+    font-size: larger;
+    color: #333;
+    background: none;
+    border: none;
+    padding-right: 25px;
+    padding-top: 10px;
+    cursor: pointer;
+}
+
+header button:hover {
+    color: #005a9e;
+}
+
+footer {
+    background-color: #fff;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+footer textarea {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: calc(100vw - 90px);
+    height: 100px;
+    padding: 8px;
+    outline: none;
+    border-top: 1px solid #333;
+    border-right: 1px solid #333;
+    border-left: 1px solid #333;
+    border-bottom: 1px solid #333;
+    border-radius: 8px;
+    resize: none;
+    box-sizing: border-box;
+    transition: 0.3s ease;
+}
+
+footer textarea:focus {
+    border-bottom: 5px solid #005a9e;
+}
+
+footer button {
+    position: relative;
+    bottom: 10px;
+    width: 60px;
+    padding: 8px;
+    background-color: #0078d7;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+footer button:hover {
+    background-color: #005a9e;
+}
+
+.userMessage {
+    position: relative;
+    top: 10px;
+    background-color: #8eb4c5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    text-align: right;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.AIMessage {
+    position: relative;
+    top: 10px;
+    background-color: #af8cd6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: left;
+    font-size: 14px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 10px;
+}

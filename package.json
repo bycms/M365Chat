@@ -1,0 +1,14 @@
+{
+  "name": "msgraph-node-project",
+  "version": "1.0.0",
+  "description": "Microsoft Graph API authentication and data fetching with a Sign In button",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@microsoft/microsoft-graph-client": "^3.0.0",
+    "msal-node": "^0.0.1-security",
+    "node-static": "^0.7.11"
+  }
+}
