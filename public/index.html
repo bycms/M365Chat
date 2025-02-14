@@ -7,17 +7,24 @@
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
-        <header>
-            <label>Microsoft 365 Work Chat</label><button id="sign-in">Sign in</button>
-        </header>
-        <div id="main">
-            
+        <div class="sidebar">
+            <h2>Actions</h2>
         </div>
-        <footer>
-            <textarea id="user-input" placeholder="Type a message..."></textarea><button id="send">Send</button>
-        </footer>
+        <div class="main-content">
+            <header id="header">
+                <label>Microsoft 365 Work Chat</label>
+                <button id="sign-in">Sign in</button>
+            </header>
+            <div id="main">
+                
+            </div>
+            <footer>
+                <textarea id="user-input" placeholder="Type a message..."></textarea>
+                <button id="send">Send</button>
+            </footer>
+        </div>
+        <script src="https://alcdn.msauth.net/browser/2.32.1/js/msal-browser.min.js"></script>
+        <script src="graph.js"></script>
+        <script src="spark.js"></script>
     </body>
-    <script src="https://alcdn.msauth.net/browser/2.32.1/js/msal-browser.min.js"></script>
-    <script src="graph.js"></script>
-    <script src="spark.js"></script>
 </html>
