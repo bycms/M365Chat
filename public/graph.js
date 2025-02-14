@@ -45,7 +45,7 @@ function signIn() {
         document.getElementById("sign-in").textContent = `Signed in as ${userName}`;
       });
       document.getElementById("sign-in").disabled = "true";
-      getFirstTaskList();
+      getTaskLists();
       // Additional logic after sign-in can be added here.
     })
     .catch(error => {
@@ -72,8 +72,9 @@ async function getUserName() {
 document.getElementById("sign-in").addEventListener("click", signIn);
 
 /************** Below are Graph API functions used in chats. **************/
-async function getFirstTaskList() {
+async function getTaskLists() {
   try {
+    let taskNames = [];
     const response = await fetch(`https://graph.microsoft.com/v1.0/me/todo/lists`, {
       method: "GET",
       headers: {
@@ -83,44 +84,40 @@ async function getFirstTaskList() {
     const data = await response.json();
     console.log(data?.value[0]?.id);
     window.firstTaskListId = data?.value[0]?.id;
+
+    for (const urls of data?.value) {
+      try {
+        const res = await fetch(`https://graph.microsoft.com/v1.0/me/todo/lists/${urls.id}/tasks`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${window.accToken}`
+          }
+        });
+        const dat = await res.json();
+
+        for (const tasks of dat?.value) {
+          taskNames.push(`${tasks.title} Status: ${tasks.status} Starts From ${dateToStr(tasks.createdDateTime)} Ends At ${dateToStr(tasks.dueDateTime?.dateTime)} repeat ${tasks.recurrence?.pattern.type}`);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    console.log(taskNames);
+    window.taskNames = taskNames;
   } catch (error) {
     console.error(error);
   }
 }
 
-async function fetchAllTasks() {
-  const taskListsEndpoint = 'https://graph.microsoft.com/v1.0/me/todo/lists';
-  const options = {
-      method: 'GET',
-      headers: {
-          'Authorization': `Bearer ${window.accessToken}`,
-          'Content-Type': 'application/json'
-      }
-  };
+function dateToStr(timestamp) {
+  let date = new Date(timestamp);
 
-  try {
-      // Fetch all task lists
-      const taskListsResponse = await fetch(taskListsEndpoint, options);
-      if (!taskListsResponse.ok) {
-          throw new Error(`Error fetching task lists: ${taskListsResponse.statusText}`);
-      }
-      const taskListsData = await taskListsResponse.json();
-      const taskLists = taskListsData.value;
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  const year = date.getUTCFullYear();
+  const hours = String(date.getUTCHours()).padStart(2, '0');
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+  const formattedDateTime = `${month}/${day}/${year},${hours}:${minutes}`;
 
-      // Fetch tasks from each task list
-      const allTasks = [];
-      for (const list of taskLists) {
-          const tasksEndpoint = `https://graph.microsoft.com/v1.0/me/todo/lists/${list.id}/tasks`;
-          const tasksResponse = await fetch(tasksEndpoint, options);
-          if (!tasksResponse.ok) {
-              throw new Error(`Error fetching tasks from list ${list.id}: ${tasksResponse.statusText}`);
-          }
-          const tasksData = await tasksResponse.json();
-          allTasks.push(...tasksData.value);
-      }
-
-      console.log(allTasks); // Array of all tasks from all lists
-  } catch (error) {
-      console.error(error);
-  }
+  return formattedDateTime;
 }

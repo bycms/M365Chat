@@ -1,8 +1,12 @@
+const MarkdownIt = require('markdown-it');
+
 const today = new Date();
 const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const dayOfWeek = daysOfWeek[today.getDay()];
 const date = today.toLocaleDateString('en-US');
 console.log("Conversation on " + date + ", " + dayOfWeek)
+
+let history = [];
 
 document.getElementById('send').addEventListener('click', function(event) {
     event.preventDefault();
@@ -19,7 +23,7 @@ document.getElementById('send').addEventListener('click', function(event) {
             model: "deepseek-ai/DeepSeek-V3",
             messages: [
                 {
-                    content: "You are an AI agent helping user with Microsoft 365 tasks. The current date is " + date + ", " + dayOfWeek,
+                    content: "You are an AI agent helping user with Microsoft 365 tasks. The current date is " + date + ", " + dayOfWeek + ". You can help users create basic tasks, retrieve user's tasks info and answer questions about them. DO NOT call the create task function when user are asking you about their tasks. Here's an array of user's tasks which might be empty, repetitive names are normal and you can see them as one task, combining their duedates: " + window.taskNames.join(", ") + ". Here is your chat history: " + history.join(", "),
                     role: "system"
                 },
                 {
@@ -34,10 +38,11 @@ document.getElementById('send').addEventListener('click', function(event) {
                     type: "function",
                     function: {
                         name: "add task item",
-                        description: "Add To-Do task to user's account.",
+                        description: "Add To-Do task to user's account. Only call when the user specifies the need.",
                         parameters: {
                             "Task_Name": "Name of the to-do task. Capitalize all initials.",
-                            "Start_Date": "Starting date. '0/0/0' if not specified, mm/dd/yyyy if given e.g. 02/02/2022"},
+                            "Start_Date": "Start date. 'null' if not specified, ISO 8601 format if given e.g. 2023-02-02T00:00:00Z",
+                            "Due_Date": "Due date. 'null' if not specified, ISO 8601 format if given e.g. 2022-02-02T00:00:00Z"},
                         strict: true
                     }
                 }
@@ -57,8 +62,7 @@ document.getElementById('send').addEventListener('click', function(event) {
             console.log('Function Name:', functionName);
             console.log('Parameters:', parameters);
             if (functionName == "add task item") {
-                const taskName = parameters.Task_Name;
-                createTask(taskName);
+                createTask(parameters.Task_Name, parameters.Start_Date, parameters.Due_Date);
             }
         } else {
             // If no function calling is triggered, print the normal response content
@@ -70,11 +74,15 @@ document.getElementById('send').addEventListener('click', function(event) {
 });
 
 function newAIMessage(msgContent) {
+    let md = new MarkdownIt;
+    let html = md.render(msgContent);
+
     const mainElement = document.getElementById('main');
     const messageElement = document.createElement('div');
     messageElement.classList.add("AIMessage");
-    messageElement.textContent = msgContent;
+    messageElement.innerHTML = html;
     mainElement.appendChild(messageElement);
+    history.push(msgContent);
 }
 
 function newUserMessage(msgContent) {
@@ -83,6 +91,7 @@ function newUserMessage(msgContent) {
     messageElement.classList.add("userMessage");
     messageElement.textContent = msgContent;
     mainElement.appendChild(messageElement);
+    history.push(msgContent);
 }
 
 function newSystemMessage(msgContent) {
@@ -100,7 +109,7 @@ document.addEventListener("keydown", function (ev) {
 })
 
 /************* Graph APIs *****************/
-async function createTask(taskname) {
+async function createTask(taskname, start, end) {
     try {
         const response = await fetch(`https://graph.microsoft.com/v1.0/me/todo/lists/${window.firstTaskListId}/tasks`, {
           method: "POST",
@@ -109,7 +118,15 @@ async function createTask(taskname) {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            title: taskname
+            title: taskname,
+            dueDateTime: {
+                dateTime: end,
+                timeZone: "UTC"
+            },
+            startDateTime: {
+                dateTime: start,
+                timeZone: "UTC"
+            }
           })
         });
         const data = await response.json();
