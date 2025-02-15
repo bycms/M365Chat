@@ -157,3 +157,65 @@ footer button:hover {
         transform: translateY(0);
     }
 }
+
+@media only screen and (max-width: 600px) {
+    /* Adjust sidebar for mobile */
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        box-shadow: none;
+        padding: 10px;
+    }
+
+    /* Adjust main content for mobile */
+    .main-content {
+        margin-left: 0;
+        padding: 10px;
+        width: 100%;
+        height: auto;
+    }
+
+    /* Adjust header for mobile */
+    header {
+        padding: 10px;
+        text-align: center;
+    }
+
+    header button {
+        position: static;
+        margin-top: 10px;
+    }
+
+    /* Adjust footer for mobile */
+    footer {
+        width: 100%;
+        padding: 10px;
+        height: auto;
+        position: relative;
+        margin-left: 0;
+    }
+
+    footer textarea {
+        width: 100%;
+        height: 80px;
+        margin-bottom: 10px;
+    }
+
+    footer button {
+        width: 100%;
+        padding: 10px;
+    }
+
+    /* Adjust message styling for mobile */
+    .userMessage, .AIMessage {
+        max-width: 90%;
+        margin: 0 auto 10px;
+        float: none;
+    }
+
+    .sysMessage {
+        font-size: 14px;
+        text-align: center;
+    }
+}
