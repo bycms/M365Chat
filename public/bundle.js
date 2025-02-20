@@ -8378,7 +8378,7 @@ document.getElementById('send').addEventListener('click', function(event) {
             model: "deepseek-ai/DeepSeek-V3",
             messages: [
                 {
-                    content: "You are an AI agent helping user with Microsoft 365 tasks. The current date is " + date + ", " + dayOfWeek + ". You can help users create basic tasks, retrieve user's tasks info and answer questions about them. DO NOT call the create task function when user are asking you about their tasks. Here's an array of user's tasks which might be empty, repetitive names are normal and you can see them as one task, combining their duedates: " + window.taskNames.join(", ") + ". Here is your chat history: " + history.join(", "),
+                    content: "You are an AI agent helping user with Microsoft 365 tasks. The current date is " + date + ", " + dayOfWeek + ". You can help users create basic tasks, retrieve user's tasks info and answer questions about them. DO NOT call the create task function when user are asking you about their tasks. Here's an array of user's tasks which might be empty, repetitive names are normal and you can see them as one task, combining their duedates: " + window.taskNames.length ? window.taskNames.join(", ") : " " + ". Here is your chat history: " + history.join(", "),
                     role: "system"
                 },
                 {
