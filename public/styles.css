@@ -108,6 +108,10 @@ footer button:hover {
 }
 
 /* Message styling */
+#sysProcess {
+    display: none;
+}
+
 .userMessage {
     max-width: 55%;
     background-color: #c5d4da;
