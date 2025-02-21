@@ -13,8 +13,8 @@ document.getElementById('send').addEventListener('click', function(event) {
     
     const message = document.getElementById('user-input').value;
     newUserMessage(message);
-    document.getElementById("sysProcess").style.display = "block";
-    document.getElementById("sysProcess").style.textContent = "Deciding what to do...";
+    document.getElementById("sysProcess").style.display = "block"; console.log("Showed process.")
+    document.getElementById("sysProcess").innerHTML = "Deciding what to do...";
     document.getElementById("user-input").value = "";
 
     const options = {
@@ -57,7 +57,7 @@ document.getElementById('send').addEventListener('click', function(event) {
     fetch('https://api.siliconflow.cn/v1/chat/completions', options)
     .then(response => response.json())
     .then(response => {
-        document.getElementById("sysProcess").style.textContent = "Loading response...";
+        document.getElementById("sysProcess").innerHTML = "Loading response...";
         const message = response.choices[0]?.message;
         
         if (message?.tool_calls && message.tool_calls.length > 0) {
@@ -83,7 +83,7 @@ function newAIMessage(msgContent) {
     let md = new MarkdownIt;
     let html = md.render(msgContent);
 
-    const mainElement = document.getElementById('main');
+    const mainElement = document.getElementById('chatArea');
     const messageElement = document.createElement('div');
     messageElement.classList.add("AIMessage");
     messageElement.innerHTML = html;
@@ -92,7 +92,7 @@ function newAIMessage(msgContent) {
 }
 
 function newUserMessage(msgContent) {
-    const mainElement = document.getElementById('main');
+    const mainElement = document.getElementById('chatArea');
     const messageElement = document.createElement('div');
     messageElement.classList.add("userMessage");
     messageElement.textContent = msgContent;
@@ -101,7 +101,7 @@ function newUserMessage(msgContent) {
 }
 
 function newSystemMessage(msgContent) {
-    const mainElement = document.getElementById('main');
+    const mainElement = document.getElementById('chatArea');
     const messageElement = document.createElement('div');
     messageElement.classList.add("sysMessage");
     messageElement.textContent = msgContent;
