@@ -8368,6 +8368,10 @@ document.getElementById('send').addEventListener('click', function(event) {
     
     const message = document.getElementById('user-input').value;
     newUserMessage(message);
+    document.getElementById("sysProcess").style.display = "block";
+    document.getElementById("sysProcess").style.textContent = "Deciding what to do...";
+    document.getElementById("user-input").value = "";
+
     const options = {
         method: 'POST',
         headers: {
@@ -8378,7 +8382,7 @@ document.getElementById('send').addEventListener('click', function(event) {
             model: "deepseek-ai/DeepSeek-V3",
             messages: [
                 {
-                    content: "You are an AI agent helping user with Microsoft 365 tasks. The current date is " + date + ", " + dayOfWeek + ". You can help users create basic tasks, retrieve user's tasks info and answer questions about them. DO NOT call the create task function when user are asking you about their tasks. Here's an array of user's tasks which might be empty, repetitive names are normal and you can see them as one task, combining their duedates: " + window.taskNames.length ? window.taskNames.join(", ") : " " + ". Here is your chat history: " + history.join(", "),
+                    content: "You are an AI agent helping user with Microsoft 365 tasks. The current date is " + date + ", " + dayOfWeek + ". You can help users create basic tasks, retrieve user's tasks info and answer questions about them. DO NOT call the create task function when user are asking you about their tasks. Here's an array of user's tasks which might be empty, repetitive names are normal and you can see them as one task, combining their duedates: " + window.taskNames.length ? window.taskNames.join(",") : " "+ ". Here is your chat history: " + history.join(", "),
                     role: "system"
                 },
                 {
@@ -8408,6 +8412,7 @@ document.getElementById('send').addEventListener('click', function(event) {
     fetch('https://api.siliconflow.cn/v1/chat/completions', options)
     .then(response => response.json())
     .then(response => {
+        document.getElementById("sysProcess").style.textContent = "Loading response...";
         const message = response.choices[0]?.message;
         
         if (message?.tool_calls && message.tool_calls.length > 0) {
@@ -8423,6 +8428,7 @@ document.getElementById('send').addEventListener('click', function(event) {
             // If no function calling is triggered, print the normal response content
             console.log('Response Content:', message?.content || 'No content available');
             newAIMessage(message?.content);
+            document.getElementById("sysProcess").style.display = "none";
         }
     })
     .catch(err => console.error(err));
@@ -8497,4 +8503,5 @@ async function createTask(taskname, start, end) {
         console.error(error);
       }
 }
+
 },{"markdown-it":10}]},{},[14]);
