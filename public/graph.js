@@ -30,6 +30,7 @@ const msalInstance = new msal.PublicClientApplication({
 
 window.accToken;
 window.isSignedIn = false;
+window.taskNames = [];
 
 function signIn() {
   const loginRequest = {
